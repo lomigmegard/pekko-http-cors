@@ -42,14 +42,14 @@ lazy val dontPublishSettings = Seq(
 )
 
 lazy val root = (project in file("."))
-  .aggregate(`akka-http-cors`, `akka-http-cors-example`, `akka-http-cors-bench-jmh`)
+  .aggregate(`pekko-http-cors`, `pekko-http-cors-example`, `pekko-http-cors-bench-jmh`)
   .settings(commonSettings)
   .settings(dontPublishSettings)
 
 lazy val akkaVersion     = "2.6.20"
 lazy val akkaHttpVersion = "10.2.10"
 
-lazy val `akka-http-cors` = project
+lazy val `pekko-http-cors` = project
   .settings(commonSettings)
   .settings(publishSettings)
   .settings(
@@ -64,8 +64,8 @@ lazy val `akka-http-cors` = project
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % Test
   )
 
-lazy val `akka-http-cors-example` = project
-  .dependsOn(`akka-http-cors`)
+lazy val `pekko-http-cors-example` = project
+  .dependsOn(`pekko-http-cors`)
   .settings(commonSettings)
   .settings(dontPublishSettings)
   .settings(
@@ -73,8 +73,8 @@ lazy val `akka-http-cors-example` = project
     // libraryDependencies += "ch.megard" %% "akka-http-cors" % version.value
   )
 
-lazy val `akka-http-cors-bench-jmh` = project
-  .dependsOn(`akka-http-cors`)
+lazy val `pekko-http-cors-bench-jmh` = project
+  .dependsOn(`pekko-http-cors`)
   .enablePlugins(JmhPlugin)
   .settings(commonSettings)
   .settings(dontPublishSettings)
