@@ -7,7 +7,7 @@ brew tap adoptopenjdk/openjdk
 brew cask install adoptopenjdk8
 sbt -v --java-home /Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home
 > + test
-> project akka-http-cors
+> project pekko-http-cors
 > + publishSigned
 > sonatypeBundleRelease
 ```

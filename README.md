@@ -5,23 +5,18 @@
 
 CORS (Cross Origin Resource Sharing) is a mechanism to enable cross origin requests.
 
-This is a Scala/Java implementation for the server-side targeting the [akka-http](https://github.com/akka/akka-http) library.
+This is a Scala/Java implementation for the server-side targeting the [pekko-http](https://github.com/apache/incubator-pekko-http) library.
+
+Pekko Http Cors is a fork of [Akka Http Cors](https://github.com/lomigmegard/akka-http-cors) 1.2.x release.
 
 ## Versions
 
-| Version | Release date | Akka Http version | Scala versions                |
-|---------|--------------|-------------------|-------------------------------|
-| `1.2.0` | 2023-03-04   | `10.2.10`         | `2.12.17`, `2.13.10`, `3.2.2` |
-| `1.1.3` | 2022-01-30   | `10.2.7`          | `2.12.15`, `2.13.8`, `3.1.1`  |
-| `1.0.0` | 2020-05-25   | `10.1.12`         | `2.12.11`, `2.13.2`           |
-| `0.1.0` | 2016-03-20   | `2.4.2`           | `2.11.8`                      |
+At the moment only snapshots version are available, waiting for the first stable release of the [Apache Pekko](https://pekko.apache.org) project.
 
-Some less interesting versions are not listed in the above table. The complete list can be found in the [CHANGELOG](CHANGELOG.md) file.
-
-## Getting Akka Http Cors
-akka-http-cors is deployed to Maven Central. Add it to your `build.sbt` or `Build.scala`:
+## Getting Pekko Http Cors
+pekko-http-cors is deployed to Maven Central. Add it to your `build.sbt` or `Build.scala`:
 ```scala
-libraryDependencies += "ch.megard" %% "akka-http-cors" % "1.2.0"
+libraryDependencies += "ch.megard" %% "pekko-http-cors" % "0.0.0-SNAPSHOT"
 ```
 
 ## Quick Start
@@ -29,7 +24,7 @@ The simplest way to enable CORS in your application is to use the `cors` directi
 Settings are passed as a parameter to the directive, with your overrides loaded from the `application.conf`.
 
 ```scala
-import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
+import ch.megard.pekko.http.cors.scaladsl.CorsDirectives._
 
 val route: Route = cors() {
   complete(...)
@@ -44,15 +39,15 @@ val strictRoute: Route = cors(settings) {
 }
 ```
 
-A [full example](akka-http-cors-example/src/main/scala/ch/megard/akka/http/cors/scaladsl/CorsServer.scala), with proper exception and rejection handling, is available in the `akka-http-cors-example` sub-project. 
+A [full example](pekko-http-cors-example/src/main/scala/ch/megard/pekko/http/cors/scaladsl/CorsServer.scala), with proper exception and rejection handling, is available in the `akka-http-cors-example` sub-project. 
 
 ## Rejection
 The CORS directives can reject requests using the `CorsRejection` class. Requests can be either malformed or not allowed to access the resource.
 
-A rejection handler is provided by the library to return meaningful HTTP responses. Read the [akka documentation](http://doc.akka.io/docs/akka-http/current/scala/http/routing-dsl/rejections.html) to learn more about rejections, or if you need to write your own handler.
+A rejection handler is provided by the library to return meaningful HTTP responses. Read the pekko documentation (link TODO) to learn more about rejections, or if you need to write your own handler.
 ```scala
-import akka.http.scaladsl.server.directives.ExecutionDirectives._
-import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
+import org.apache.pekko.http.scaladsl.server.directives.ExecutionDirectives._
+import ch.megard.pekko.http.cors.scaladsl.CorsDirectives._
 
 val route: Route = handleRejections(corsRejectionHandler) {
   cors() {
@@ -63,11 +58,11 @@ val route: Route = handleRejections(corsRejectionHandler) {
 
 ## Java support
 
-Starting from version `0.2.1` Java is supported, mirroring the Scala API. For usage, look at the full [Java CorsServer example](akka-http-cors-example/src/main/java/ch/megard/akka/http/cors/javadsl/CorsServer.java).
+Java is supported, mirroring the Scala API. For usage, look at the full [Java CorsServer example](pekko-http-cors-example/src/main/java/ch/megard/pekko/http/cors/javadsl/CorsServer.java).
 
 ## Configuration
 
-[Reference configuration](akka-http-cors/src/main/resources/reference.conf).
+[Reference configuration](pekko-http-cors/src/main/resources/reference.conf).
 
 #### allowGenericHttpRequests
 `Boolean` with default value `true`.
@@ -117,36 +112,8 @@ List of headers (other than [simple response headers](https://www.w3.org/TR/cors
 When set, the amount of seconds the browser is allowed to cache the results of a preflight request. This value is returned as part of the `Access-Control-Max-Age` preflight response header. If `None`, the header is not added to the preflight response.
 
 ## Benchmarks
-Using the [sbt-jmh](https://github.com/ktoso/sbt-jmh) plugin, preliminary benchmarks have been performed to measure the impact of the `cors` directive on the performance. The first results are shown below.
 
-Results are not all coming from the same machine.
-
-#### v0.1.2 (Akka 2.4.4)
-```
-> jmh:run -i 40 -wi 30 -f2 -t1
-Benchmark                         Mode  Cnt     Score     Error  Units
-CorsBenchmark.baseline           thrpt   80  3601.121 ± 102.274  ops/s
-CorsBenchmark.default_cors       thrpt   80  3582.090 ±  95.304  ops/s
-CorsBenchmark.default_preflight  thrpt   80  3482.716 ±  89.124  ops/s
-```
-
-#### v0.1.3 (Akka 2.4.7)
-```
-> jmh:run -i 40 -wi 30 -f2 -t1
-Benchmark                         Mode  Cnt     Score     Error  Units
-CorsBenchmark.baseline           thrpt   80  3657.762 ± 141.409  ops/s
-CorsBenchmark.default_cors       thrpt   80  3687.351 ±  35.176  ops/s
-CorsBenchmark.default_preflight  thrpt   80  3645.629 ±  30.411  ops/s
-```
-
-#### v0.2.2 (Akka HTTP 10.0.6)
-```
-> jmh:run -i 40 -wi 30 -f2 -t1
-Benchmark                         Mode  Cnt     Score     Error  Units
-CorsBenchmark.baseline           thrpt   80  9730.001 ±  25.281  ops/s
-CorsBenchmark.default_cors       thrpt   80  9159.320 ±  25.459  ops/s
-CorsBenchmark.default_preflight  thrpt   80  9172.938 ±  26.794  ops/s
-```
+Please look at the original project [Akka Http Cors](https://github.com/lomigmegard/akka-http-cors) for the existing benchmarks.
 
 ## References
 - [W3C Specification: CORS](https://www.w3.org/TR/cors/)
