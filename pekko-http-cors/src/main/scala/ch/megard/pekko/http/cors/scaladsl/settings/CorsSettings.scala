@@ -111,9 +111,9 @@ abstract class CorsSettings private[pekko] () extends javadsl.settings.CorsSetti
   override def getAllowCredentials         = this.allowCredentials
   override def getAllowedOrigins           = this.allowedOrigins
   override def getAllowedHeaders           = this.allowedHeaders
-  override def getAllowedMethods           = (this.allowedMethods: Seq[org.apache.pekko.http.javadsl.model.HttpMethod]).asJava
-  override def getExposedHeaders           = this.exposedHeaders.asJava
-  override def getMaxAge                   = OptionConverters.toJava(this.maxAge)
+  override def getAllowedMethods = (this.allowedMethods: Seq[org.apache.pekko.http.javadsl.model.HttpMethod]).asJava
+  override def getExposedHeaders = this.exposedHeaders.asJava
+  override def getMaxAge         = OptionConverters.toJava(this.maxAge)
 
   // Currently the easiest way to go from Java models to their Scala equivalent is to cast.
   // See https://github.com/akka/akka-http/issues/661 for a potential opening of the JavaMapping API.
@@ -129,7 +129,9 @@ abstract class CorsSettings private[pekko] () extends javadsl.settings.CorsSetti
   override def withAllowedHeaders(newValue: javadsl.model.HttpHeaderRange): CorsSettings = {
     copy(allowedHeaders = newValue.asInstanceOf[HttpHeaderRange])
   }
-  override def withAllowedMethods(newValue: java.lang.Iterable[org.apache.pekko.http.javadsl.model.HttpMethod]): CorsSettings = {
+  override def withAllowedMethods(
+      newValue: java.lang.Iterable[org.apache.pekko.http.javadsl.model.HttpMethod]
+  ): CorsSettings = {
     copy(allowedMethods = newValue.asScala.toList.asInstanceOf[List[HttpMethod]])
   }
   override def withExposedHeaders(newValue: java.lang.Iterable[String]): CorsSettings = {
