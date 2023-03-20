@@ -50,7 +50,7 @@ lazy val root = (project in file("."))
 
 // Until stable look for latest version at https://repository.apache.org/content/groups/snapshots/org/apache/pekko/
 lazy val pekkoVersion     = "0.0.0+26605-0a8b8a57-SNAPSHOT"
-lazy val pekkoHttpVersion = "0.0.0+4311-07201517-SNAPSHOT"
+lazy val pekkoHttpVersion = "0.0.0+4329-fad15dd0-SNAPSHOT"
 
 lazy val `pekko-http-cors` = project
   .settings(commonSettings)
@@ -60,7 +60,7 @@ lazy val `pekko-http-cors` = project
     Compile / packageBin / packageOptions += Package.ManifestAttributes(
       "Automatic-Module-Name" -> "ch.megard.pekko.http.cors"
     ),
-    libraryDependencies += "org.apache.pekko" %% "pekko-http"   % pekkoHttpVersion cross CrossVersion.for3Use2_13,
+    libraryDependencies += "org.apache.pekko" %% "pekko-http" % pekkoHttpVersion cross CrossVersion.for3Use2_13,
     libraryDependencies += "org.apache.pekko" %% "pekko-stream" % pekkoVersion % Provided cross CrossVersion.for3Use2_13,
     libraryDependencies += "org.apache.pekko" %% "pekko-http-testkit" % pekkoHttpVersion % Test cross CrossVersion.for3Use2_13,
     libraryDependencies += "org.apache.pekko" %% "pekko-stream-testkit" % pekkoVersion % Test cross CrossVersion.for3Use2_13,
