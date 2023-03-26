@@ -49,7 +49,7 @@ lazy val root = (project in file("."))
   .settings(dontPublishSettings)
 
 // Until stable look for latest version at https://repository.apache.org/content/groups/snapshots/org/apache/pekko/
-lazy val pekkoVersion     = "0.0.0+26605-0a8b8a57-SNAPSHOT"
+lazy val pekkoVersion     = "0.0.0+26627-69b5045f-SNAPSHOT"
 lazy val pekkoHttpVersion = "0.0.0+4329-fad15dd0-SNAPSHOT"
 
 lazy val `pekko-http-cors` = project
