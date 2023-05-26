@@ -9,12 +9,12 @@ import org.apache.pekko.http.scaladsl.model.headers.HttpOrigin
 import org.apache.pekko.http.scaladsl.model.{HttpHeader, HttpMethod, HttpMethods}
 import ch.megard.pekko.http.cors.javadsl
 import ch.megard.pekko.http.cors.scaladsl.model.{HttpHeaderRange, HttpOriginMatcher}
+import ch.megard.pekko.http.cors.OptionConverters
 import com.typesafe.config.ConfigException.{Missing, WrongType}
 import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.collection.JavaConverters._
 import scala.collection.immutable.{ListMap, Seq}
-import scala.compat.java8.OptionConverters
 import scala.util.Try
 
 /** Settings used by the CORS directives.

@@ -2,13 +2,21 @@ lazy val commonSettings = Seq(
   organization       := "ch.megard",
   version            := "0.0.0-SNAPSHOT",
   scalaVersion       := "2.13.10",
-  crossScalaVersions := Seq(scalaVersion.value, "2.12.17", "3.2.2"),
+  crossScalaVersions := Seq(scalaVersion.value, "2.12.17", "3.3.0"),
   scalacOptions ++= Seq(
     "-encoding",
     "UTF-8",
     "-unchecked",
     "-deprecation"
-  ),
+  ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, n)) if n == 12 || n == 13 =>
+      Seq(
+        "-opt:l:inline",
+        "-opt-inline-from:<sources>"
+      )
+    case Some((3, n)) =>
+      Seq.empty // Inliner doesn't exist for Scala 3 yet
+  }),
   javacOptions ++= Seq(
     "-encoding",
     "UTF-8",
@@ -49,8 +57,8 @@ lazy val root = (project in file("."))
   .settings(dontPublishSettings)
 
 // Until stable look for latest version at https://repository.apache.org/content/groups/snapshots/org/apache/pekko/
-lazy val pekkoVersion     = "0.0.0+26605-0a8b8a57-SNAPSHOT"
-lazy val pekkoHttpVersion = "0.0.0+4329-fad15dd0-SNAPSHOT"
+lazy val pekkoVersion     = "0.0.0+26669-ec5b6764-SNAPSHOT"
+lazy val pekkoHttpVersion = "0.0.0+4411-6fe04045-SNAPSHOT"
 
 lazy val `pekko-http-cors` = project
   .settings(commonSettings)
@@ -60,11 +68,11 @@ lazy val `pekko-http-cors` = project
     Compile / packageBin / packageOptions += Package.ManifestAttributes(
       "Automatic-Module-Name" -> "ch.megard.pekko.http.cors"
     ),
-    libraryDependencies += "org.apache.pekko" %% "pekko-http" % pekkoHttpVersion cross CrossVersion.for3Use2_13,
-    libraryDependencies += "org.apache.pekko" %% "pekko-stream" % pekkoVersion % Provided cross CrossVersion.for3Use2_13,
-    libraryDependencies += "org.apache.pekko" %% "pekko-http-testkit" % pekkoHttpVersion % Test cross CrossVersion.for3Use2_13,
-    libraryDependencies += "org.apache.pekko" %% "pekko-stream-testkit" % pekkoVersion % Test cross CrossVersion.for3Use2_13,
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % Test
+    libraryDependencies += "org.apache.pekko" %% "pekko-http"           % pekkoHttpVersion,
+    libraryDependencies += "org.apache.pekko" %% "pekko-stream"         % pekkoVersion     % Provided,
+    libraryDependencies += "org.apache.pekko" %% "pekko-http-testkit"   % pekkoHttpVersion % Test,
+    libraryDependencies += "org.apache.pekko" %% "pekko-stream-testkit" % pekkoVersion     % Test,
+    libraryDependencies += "org.scalatest"    %% "scalatest"            % "3.2.15"         % Test
   )
 
 lazy val `pekko-http-cors-example` = project
@@ -72,7 +80,7 @@ lazy val `pekko-http-cors-example` = project
   .settings(commonSettings)
   .settings(dontPublishSettings)
   .settings(
-    libraryDependencies += "org.apache.pekko" %% "pekko-stream" % pekkoVersion cross CrossVersion.for3Use2_13
+    libraryDependencies += "org.apache.pekko" %% "pekko-stream" % pekkoVersion
     // libraryDependencies += "ch.megard" %% "pekko-http-cors" % version.value
   )
 
@@ -82,5 +90,5 @@ lazy val `pekko-http-cors-bench-jmh` = project
   .settings(commonSettings)
   .settings(dontPublishSettings)
   .settings(
-    libraryDependencies += "org.apache.pekko" %% "pekko-stream" % pekkoVersion cross CrossVersion.for3Use2_13
+    libraryDependencies += "org.apache.pekko" %% "pekko-stream" % pekkoVersion
   )
