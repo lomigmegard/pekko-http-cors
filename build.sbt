@@ -72,7 +72,7 @@ lazy val `pekko-http-cors` = project
     libraryDependencies += "org.apache.pekko" %% "pekko-stream"         % pekkoVersion     % Provided,
     libraryDependencies += "org.apache.pekko" %% "pekko-http-testkit"   % pekkoHttpVersion % Test,
     libraryDependencies += "org.apache.pekko" %% "pekko-stream-testkit" % pekkoVersion     % Test,
-    libraryDependencies += "org.scalatest"    %% "scalatest"            % "3.2.15"         % Test
+    libraryDependencies += "org.scalatest"    %% "scalatest"            % "3.2.16"         % Test
   )
 
 lazy val `pekko-http-cors-example` = project
